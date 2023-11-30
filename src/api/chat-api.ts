@@ -1,5 +1,5 @@
 import {io, Socket} from 'socket.io-client';
-import {MessageType, UserType} from "../App.tsx";
+import {MessageType, UserType} from "../components/messages-list/MessagesList.tsx";
 
 const URL = 'http://localhost:3000' || 'https://chat-backend-git-main-sergshcherbina.vercel.app/'
 
@@ -12,23 +12,29 @@ export const api = {
         addMessage: (message: MessageType) => void,
         setMessages: (messages: MessageType[]) => void,
         userWrites: (user: UserType) => void,
+        setUserId: (userId: string) => void,
+        counterUsersRoomHandler: (obj: { countUsersRoom: string, message: string }) => void
     ) {
-        this.socket?.on('new-message-send', addMessage);
+        this.socket?.on('new-message-send', addMessage );
         this.socket?.on('init-messages-published', setMessages);
-        this.socket?.on('user-writes-message', userWrites)
+        this.socket?.on('writes', userWrites)
+        this.socket?.on('set-userId', setUserId);
+        this.socket?.on('join', counterUsersRoomHandler);
     },
     disconnect() {
         this.socket?.off('init-messages-published');
         this.socket?.off('new-message-send');
-        this.socket?.off('user-writes-message');
+        this.socket?.off('writes');
+        this.socket?.off('set-userId');
+        this.socket?.off('join');
     },
-    sendMessage(textMessage: string, errorCallBack: (errorMessage: string)=>void) {
-        this.socket?.emit('client-message-send', textMessage, errorCallBack)
+    sendMessage(obj: { textMessage: string, room: string }, errorCallBack: (errorMessage: string) => void) {
+        this.socket?.emit('client-message-send', obj, errorCallBack)
     },
-    sendUserName(userName: string) {
-        this.socket?.emit('name-send', userName)
+    sendUserName(userName: string, room: string) {
+        this.socket?.emit('join', {userName, room})
     },
-    writesMessage(){
-        this.socket?.emit('writes-message')
-    }
+    writesMessage(roomValue: string) {
+        this.socket?.emit('writes', roomValue)
+    },
 }

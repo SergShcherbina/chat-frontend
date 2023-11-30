@@ -1,12 +1,15 @@
 import {Dispatch} from "redux"
-import {MessageType, UserType} from "../App"
 import {api} from "../api/chat-api.ts";
+import {MessageType, UserType} from "../components/messages-list/MessagesList.tsx";
 
 const initialState = {
     messages: [] as MessageType[],
-    userName: 'noname',
-    userWrites: []
-}
+    userName: '',
+    userWrites: [],
+    userId: '',
+    room: '',
+    countUsersRoom: '0'
+};
 
 export const chatReducer = (state: ChatInitialType = initialState, action: ChatActionType): ChatInitialType => {
     switch (action.type) {
@@ -19,11 +22,23 @@ export const chatReducer = (state: ChatInitialType = initialState, action: ChatA
                 ...state,
                 messages: [...state.messages, action.payload],
                 userWrites: state.userWrites.filter(u => u.id !== action.payload.user.id)
-
             }
         case "SET-WRITES-USER":
             return {
                 ...state, userWrites: [...state.userWrites.filter(u => u.id !== action.payload.id), action.payload]
+            }
+        case "SET-USER-ID":
+            return {
+                ...state, userId: action.payload
+            }
+        case 'SET-COUNT-USERS':
+            return {
+                ...state, countUsersRoom: action.payload
+            }
+        case 'ADD-JOIN-MESSAGE':
+            return {
+                ...state, messages: [...state.messages,
+                    {message: action.payload, id: '555', user: {id: '555', name: 'Admin', room: ''}}],
             }
         default:
             return {...state}
@@ -50,6 +65,24 @@ const writesMessagesAC = (user: UserType) => {
         payload: user
     } as const
 }
+const setUserIdAC = (userId: string) => {
+    return {
+        type: 'SET-USER-ID',
+        payload: userId,
+    } as const
+}
+const setCounterUsersAC = (count: string) => {
+    return {
+        type: 'SET-COUNT-USERS',
+        payload: count,
+    } as const
+}
+const addJoinMessageAC = (message: string) => {
+    return {
+        type: 'ADD-JOIN-MESSAGE',
+        payload: message,
+    } as const
+}
 
 //thunks
 export const connectionTC = () => {
@@ -65,42 +98,59 @@ export const connectionTC = () => {
             (user: UserType) => {
                 dispatch(writesMessagesAC(user))
             },
+            (userId: string) => {
+                dispatch(setUserIdAC(userId))
+            },
+            ({countUsersRoom, message}) => {
+                dispatch(setCounterUsersAC(countUsersRoom))
+                dispatch(addJoinMessageAC(message))
+            }
         )
     }
 }
 
 export const disconnectionTC = () => () => {
     api.disconnect()
-}
+};
 
-export const sendMessageTC = (textMessage: string) => () => {
-    const errorCallBack = (errorMessage: string)=> {
-       alert(errorMessage)
+export const sendMessageTC = (textMessage: string, room: string) => () => {
+    const errorCallBack = (errorMessage: string) => {
+        alert(errorMessage)
     }
-    api.sendMessage(textMessage, errorCallBack)
-}
+    api.sendMessage({textMessage, room}, errorCallBack)
+};
 
-export const sendUserNameTC = (userName: string) => () => {
-    api.sendUserName(userName)
-}
+export const sendUserNameTC = (userName: string, room: string) => () => {
+    api.sendUserName(userName, room)
+};
 
-export const writesMessageTC = () => () => {
-    api.writesMessage()
-}
+export const writesMessageTC = (roomValue: string) => () => {
+    api.writesMessage(roomValue)
+
+};
 
 //types
 type AddMessageAT = ReturnType<typeof addMessageAC>
 type SetMessagesAT = ReturnType<typeof setMessagesAC>
 type WritesMessagesAT = ReturnType<typeof writesMessagesAC>
+type SetUserIdAT = ReturnType<typeof setUserIdAC>
+type SetCounterUsersAT = ReturnType<typeof setCounterUsersAC>
+type AddJoinMessageAT = ReturnType<typeof addJoinMessageAC>
 
 type ChatInitialType = {
     messages: MessageType[]
     userName: string
     userWrites: Array<UserType>
+    userId: string
+    room: string
+    countUsersRoom: string
 }
 
 type ChatActionType =
     SetMessagesAT
     | AddMessageAT
     | WritesMessagesAT
+    | SetUserIdAT
+    | SetCounterUsersAT
+    | AddJoinMessageAT;
 

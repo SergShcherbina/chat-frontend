@@ -14,4 +14,3 @@ export const store = createStore(
 
 export type AppStateType = ReturnType <typeof store.getState>
 export type AppDispatchType = ThunkDispatch<AppStateType, unknown, AnyAction>;
-

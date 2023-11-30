@@ -1,5 +1,5 @@
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
-import {MessageList} from "../message-list/MessageList.tsx";
+import {MessagesList} from "../messages-list/MessagesList.tsx";
 import {Login} from "../auth/Login.tsx";
 import {SignIn} from "../auth/SignIn.tsx";
 import {Layout} from "../layout/Layout.tsx";
@@ -12,7 +12,7 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                Component: MessageList,
+                Component: MessagesList,
             },
             {
                 path: '/login',

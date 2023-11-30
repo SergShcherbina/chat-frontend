@@ -17,7 +17,7 @@ export type MessageType = {
     id: string;
     user: UserType,
 }
-export type UserType = { id: string, name: string }
+export type UserType = { id: string, name: string, room: string }
 
 
 export const MessagesList = () => {
@@ -46,7 +46,7 @@ export const MessagesList = () => {
     }
 
     const writesMessagesHandler = () => {
-        dispatch(writesMessageTC())
+        dispatch(writesMessageTC(roomValue))
     }
 
     const getRoom = (value: string) => {
@@ -63,9 +63,9 @@ export const MessagesList = () => {
                 <div className={'flex flex-col gap-5 my-3 overflow-y-auto flex-1'}>
                     {messages.map((message, i) => {
                         if (messages.length - 1 === i) {
-                            return <MessageItem key={message.id} {...message} time={timeMessage} ref={myRef}/>
+                            return <MessageItem key={message.id+i} {...message} time={timeMessage} ref={myRef}/>
                         }
-                        return <MessageItem key={message.id} {...message} time={timeMessage}/>
+                        return <MessageItem key={message.id+i} {...message} time={timeMessage}/>
                     })}
                 </div>
 
