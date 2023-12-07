@@ -1,8 +1,8 @@
 
-export const SignIn = () => {
+export const SignUp = () => {
     return (
         <h2>
-            Sign In
+            Sign Up
         </h2>
     );
 };

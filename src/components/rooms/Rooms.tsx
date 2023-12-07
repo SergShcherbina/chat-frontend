@@ -1,5 +1,5 @@
 import {FC, useState} from "react";
-import {sendUserNameTC} from "../../redux/chatReducer.ts";
+import {sendUserNameTC} from "../../redux/chat-reducer.ts";
 import {useDispatch} from "react-redux";
 import {AppDispatchType} from "../../redux/store.ts";
 import {useAppSelector} from "../../hooks/useAppSelector.ts";

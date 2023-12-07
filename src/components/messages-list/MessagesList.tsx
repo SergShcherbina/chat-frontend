@@ -7,7 +7,7 @@ import {
     disconnectionTC,
     sendMessageTC,
     writesMessageTC
-} from "../../redux/chatReducer.ts";
+} from "../../redux/chat-reducer.ts";
 import {messageObserver} from "../../utils/messageObserver.ts";
 import '../../index.css'
 import {Rooms} from "../rooms/Rooms.tsx";

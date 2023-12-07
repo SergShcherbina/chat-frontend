@@ -1,7 +1,7 @@
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import {MessagesList} from "../messages-list/MessagesList.tsx";
 import {Login} from "../auth/Login.tsx";
-import {SignIn} from "../auth/SignIn.tsx";
+import {SignUp} from "../auth/SignUp.tsx";
 import {Layout} from "../layout/Layout.tsx";
 import {NotFound} from "../not-found/NotFound.tsx";
 
@@ -19,8 +19,8 @@ const router = createBrowserRouter([
                 Component: Login,
             },
             {
-                path: '/sign-in',
-                Component: SignIn,
+                path: '/sign-up',
+                Component: SignUp,
             },
         ]
     },
