@@ -94,7 +94,7 @@ export const Login = () => {
 
                 <p className="mt-10 text-center text-sm text-gray-500">
                     Not a account?
-                    <Link to="/sign-in" className="font-semibold leading-6 text-orange-500 hover:text-orange-400 ml-1">Registering
+                    <Link to="/sign-up" className="font-semibold leading-6 text-orange-500 hover:text-orange-400 ml-1">Registering
                         a new account</Link>
                 </p>
             </div>
