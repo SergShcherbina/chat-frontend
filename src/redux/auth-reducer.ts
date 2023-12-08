@@ -38,6 +38,18 @@ export const loginTC = (userData: InputsType) => {
     }
 };
 
+export const signUpTC = (signUpData: InputsType) => async () => {
+    try {
+
+        const res =  await authApi.signUp(signUpData)
+        console.log('signUpTC:', res)
+        return res
+    } catch (e: any) {
+        console.log('signUpTC:', e)
+        return e?.response.data
+    }
+}
+
 type IsLoggedInAT = ReturnType<typeof isLoggedInAC>
 
 type AuthActions = IsLoggedInAT

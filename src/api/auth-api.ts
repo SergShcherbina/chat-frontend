@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from "axios";
-import {UserAuthType, UserType} from "./types.ts";
+import {UserType} from "./types.ts";
 import {InputsType} from "../components/auth/Login.tsx";
 
 const token = localStorage && localStorage.getItem('session')
@@ -12,9 +12,8 @@ const instance = axios.create({
 });
 
 export const authApi = {
-    signUp: async (body: UserAuthType) => {
-        const res: AxiosResponse<{message: string}, UserAuthType> =  await instance.post('/registration', body)
-        return res
+    signUp: async (body: InputsType) => {
+        return await instance.post<{message: string}>('/registration', {username: body.email, password: body.password})
     },
     login: async (body: InputsType) => {
         const res =

@@ -1,17 +1,26 @@
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {InputsType} from "./Login.tsx";
+import {useNavigate} from 'react-router-dom'
 import * as yup from "yup";
+import {signUpTC} from "../../redux/auth-reducer.ts";
+import {useAppDispatch} from "../../hooks/useAppDispatch.ts";
+import {useEffect, useState} from "react";
+import {useByTimeClearErrors} from "../../hooks/useClearMessage.ts";
+import {authApi} from "../../api/auth-api.ts";
 
 type SignUpType = {
     confirm: string
 } & InputsType
 
 export const SignUp = () => {
+    const dispatch = useAppDispatch();
+    const [errorArray, setError] = useState([])
+    const navigate = useNavigate()
 
     const schema = yup
         .object({
-            email: yup.string().email().required(),
+            email: yup.string().required().email(),
             password: yup.string().required().min(4),
             confirm: yup.string().required().oneOf([yup.ref('password')], 'Passwords must match')
         })
@@ -25,10 +34,24 @@ export const SignUp = () => {
         resolver: yupResolver(schema)
     })
 
-    const onSubmit = (data: SignUpType) => {
-        console.log(data)
+    const onSubmit = (signUpData: SignUpType) => {
+        dispatch(signUpTC({email: signUpData.email, password: signUpData.password}))
+            .then(res => {
+                if(res.errors){
+                    setError(res.errors)
+                    return
+                }
+                if(res.data.message){
+                    navigate('/login')
+                }
+            })
     }
 
+    useByTimeClearErrors(setError, errorArray)
+
+    useEffect(() => {
+        console.log(authApi.getUsers())
+    }, []);
     return (
         <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -72,6 +95,8 @@ export const SignUp = () => {
                         </div>
                         {errors.confirm && <div className={'text-red-500'}> {errors.confirm.message}</div>}
                     </div>
+
+                    <div>{errorArray.map((err, i) => <p key={err+i} className={'text-red-500'}>{err}</p>)}</div>
 
                     <div>
                         <button type="submit"

@@ -6,7 +6,7 @@ export type UserType = {
     _id: string
 }
 
-export type UserAuthType = {
-    username: string,
-    password: string
-}
+// export type UserAuthType = {
+//     username: string
+//     password: string
+// }
