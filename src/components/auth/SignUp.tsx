@@ -5,9 +5,8 @@ import {Link, useNavigate} from 'react-router-dom'
 import * as yup from "yup";
 import {signUpTC} from "../../redux/auth-reducer.ts";
 import {useAppDispatch} from "../../hooks/useAppDispatch.ts";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {useByTimeClearErrors} from "../../hooks/useClearMessage.ts";
-import {authApi} from "../../api/auth-api.ts";
 
 type SignUpType = {
     confirm: string
@@ -37,11 +36,11 @@ export const SignUp = () => {
     const onSubmit = (signUpData: SignUpType) => {
         dispatch(signUpTC({email: signUpData.email, password: signUpData.password}))
             .then(res => {
-                if(res.errors){
+                if (res.errors) {
                     setError(res.errors)
                     return
                 }
-                if(res.data.message){
+                if (res.data.message) {
                     navigate('/login')
                 }
             })
@@ -49,9 +48,6 @@ export const SignUp = () => {
 
     useByTimeClearErrors(setError, errorArray)
 
-    useEffect(() => {
-        console.log(authApi.getUsers())
-    }, []);
     return (
         <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -96,7 +92,7 @@ export const SignUp = () => {
                         {errors.confirm && <div className={'text-red-500'}> {errors.confirm.message}</div>}
                     </div>
 
-                    <div>{errorArray.map((err, i) => <p key={err+i} className={'text-red-500'}>{err}</p>)}</div>
+                    <div>{errorArray.map((err, i) => <p key={err + i} className={'text-red-500'}>{err}</p>)}</div>
 
                     <div>
                         <button type="submit"
@@ -105,7 +101,8 @@ export const SignUp = () => {
                         </button>
                         <p className="mt-10 text-center text-sm text-gray-500">
                             Go to page
-                            <Link to="/login" className="font-semibold leading-6 text-orange-500 hover:text-orange-400 ml-1">login</Link>
+                            <Link to="/login"
+                                  className="font-semibold leading-6 text-orange-500 hover:text-orange-400 ml-1">login</Link>
                         </p>
                     </div>
                 </form>

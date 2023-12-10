@@ -29,7 +29,7 @@ export const loginTC = (userData: InputsType) => {
     return async (dispatch: Dispatch) => {
         try {
             const res = await authApi.login(userData)
-            localStorage.setItem('session', res)
+            localStorage.setItem('session', res.token)
             dispatch(isLoggedInAC(true))
         } catch (e: any) {
             console.log('Error loginTC:', e)
@@ -40,7 +40,6 @@ export const loginTC = (userData: InputsType) => {
 
 export const signUpTC = (signUpData: InputsType) => async () => {
     try {
-
         const res =  await authApi.signUp(signUpData)
         console.log('signUpTC:', res)
         return res

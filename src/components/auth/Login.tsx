@@ -4,10 +4,11 @@ import {useAppDispatch} from "../../hooks/useAppDispatch.ts";
 import {useForm, SubmitHandler} from "react-hook-form"
 import * as yup from "yup"
 import {yupResolver} from "@hookform/resolvers/yup";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {Navigate} from 'react-router-dom'
 import {useSelector} from "react-redux";
 import {AppStateType} from "../../redux/store.ts";
+import {useByTimeClearErrors} from "../../hooks/useClearMessage.ts";
 
 export type InputsType = {
     email: string
@@ -16,7 +17,7 @@ export type InputsType = {
 
 export const Login = () => {
     const dispatch = useAppDispatch()
-    const [error, setError] = useState('')
+    const [errorArray, setErrors] = useState<Array<string>>([])
     const isLoggedIn = useSelector<AppStateType, boolean>(state => state.auth.isLoggedIn)
 
     const schema = yup
@@ -38,18 +39,11 @@ export const Login = () => {
 
     const onSubmit: SubmitHandler<InputsType> = (data) => {
         dispatch(loginTC(data)).then(res => {
-            setError(res?.message)
+            setErrors(res?.errors)
         })
     }
 
-    useEffect(() => {
-        console.log(1)
-        const timerId = setTimeout(() => {
-            console.log(2)
-            setError('')
-        }, 3000)
-        return () => clearTimeout(timerId)
-    }, [error]);
+    useByTimeClearErrors(setErrors, errorArray)
 
     if(isLoggedIn) return <Navigate to={'/'}/>
 
@@ -84,7 +78,7 @@ export const Login = () => {
                     </div>
 
                     <div>
-                        <div className={'text-red-500 pb-2'}>{error}</div>
+                        {errorArray.map(err => <div className={'text-red-500 pb-2'}>{err}</div>)}
                         <button type="submit"
                                 className="flex w-full justify-center rounded-md bg-orange-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-900">
                             Sign in

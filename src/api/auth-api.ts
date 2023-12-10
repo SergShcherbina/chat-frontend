@@ -17,8 +17,8 @@ export const authApi = {
     },
     login: async (body: InputsType) => {
         const res =
-            await instance.post<{ token: string, body: InputsType }>('/login', {username: body.email, password: body.password})
-        return res.data.token
+            await instance.post('/login', {username: body.email, password: body.password})
+        return res.data
     },
     getUsers: async() => {
         const res: AxiosResponse<UserType, unknown> = await instance.get('/users');

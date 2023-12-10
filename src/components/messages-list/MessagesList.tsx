@@ -11,6 +11,9 @@ import {
 import {messageObserver} from "../../utils/messageObserver.ts";
 import '../../index.css'
 import {Rooms} from "../rooms/Rooms.tsx";
+import {useAppSelector} from "../../hooks/useAppSelector.ts";
+import {Login} from "../auth/Login.tsx";
+import {authApi} from "../../api/auth-api.ts";
 
 export type MessageType = {
     message: string;
@@ -28,6 +31,7 @@ export const MessagesList = () => {
     const [value, setValue] = useState('')
     const [roomValue, setRoomValue] = useState('')
     const myRef = createRef<HTMLDivElement>()
+    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
 
     useEffect(() => {
         dispatch(connectionTC())
@@ -54,6 +58,15 @@ export const MessagesList = () => {
     }
 
     const timeMessage = ''
+
+    const getUsers =  () => {
+        authApi.getUsers().then(res => {
+            console.log(res)
+        })
+    }
+
+    if(!isLoggedIn) return <Login/>
+
     return (
         <div className={'container mx-auto flex'}>
             <Rooms getRoom={getRoom}/>
@@ -92,6 +105,7 @@ export const MessagesList = () => {
                             onClick={onSendMessage}>
                             {'send'}
                         </button>
+                        <button onClick={()=>getUsers()} >get Users</button>
                     </div>
                 </div>
             </div>
