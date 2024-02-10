@@ -31,7 +31,7 @@ export const api = {
     sendMessage(obj: { textMessage: string, room: string }, errorCallBack: (errorMessage: string) => void) {
         this.socket?.emit('client-message-send', obj, errorCallBack)
     },
-    sendUserName(userName: string, room: string) {
+    sendUserName(userName: string | null, room: string) {
         this.socket?.emit('join', {userName, room})
     },
     writesMessage(roomValue: string) {

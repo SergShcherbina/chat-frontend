@@ -44,7 +44,7 @@ function PrivateRoutes() {
     const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
     const isLoading = useAppSelector(state => state.auth.isLoading)
 
-    if(isLoading) return <h1 style={{textAlign: 'center'}}>LOADING...</h1>
+    if(isLoading) return <h1 style={{textAlign: 'center', marginTop: '20vh'}}>LOADING...</h1>
 
     const isAuthenticated = !!isLoggedIn
 

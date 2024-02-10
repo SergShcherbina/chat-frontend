@@ -1,10 +1,10 @@
 import {Dispatch} from "redux"
 import {api} from "../api/chat-api.ts";
 import {MessageType, UserType} from "../components/messages-list/MessagesList.tsx";
+import {AppStateType} from "./store.ts";
 
 const initialState = {
     messages: [] as MessageType[],
-    userName: '',
     userWrites: [],
     userId: '',
     room: '',
@@ -120,13 +120,15 @@ export const sendMessageTC = (textMessage: string, room: string) => () => {
     api.sendMessage({textMessage, room}, errorCallBack)
 };
 
-export const sendUserNameTC = (userName: string, room: string) => () => {
+export const sendUserNameTC = ( room: string) => (dispatch: Dispatch, getState: () => AppStateType) => {
+
+    dispatch
+    const userName = getState().auth.userName
     api.sendUserName(userName, room)
 };
 
 export const writesMessageTC = (roomValue: string) => () => {
     api.writesMessage(roomValue)
-
 };
 
 //types
@@ -139,7 +141,6 @@ type AddJoinMessageAT = ReturnType<typeof addJoinMessageAC>
 
 type ChatInitialType = {
     messages: MessageType[]
-    userName: string
     userWrites: Array<UserType>
     userId: string
     room: string

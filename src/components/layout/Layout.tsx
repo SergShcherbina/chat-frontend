@@ -1,11 +1,16 @@
 import {Outlet} from 'react-router-dom';
+import {useAppDispatch} from "../../hooks/useAppDispatch.ts";
+import {isLoggedInAC} from "../../redux/auth-reducer.ts";
 
 export const Layout = () => {
+    const dispatch = useAppDispatch()
     const isAuth = true
 
     const logOut = () => {
-        console.log('dispatch logOut')
+        dispatch(isLoggedInAC(false))
+        localStorage.removeItem('session')
     }
+
     const escapeFromHandler = () => {
         console.log('dispatch escapeFromHandler')
     }

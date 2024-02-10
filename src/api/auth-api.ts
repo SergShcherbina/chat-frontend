@@ -1,7 +1,6 @@
 import axios, {AxiosResponse} from "axios";
 import {UserType} from "./types.ts";
 import {InputsType} from "../components/auth/Login.tsx";
-
 const token = localStorage && localStorage.getItem('session')
 
 const instance = axios.create({
@@ -17,7 +16,7 @@ export const authApi = {
     },
     login: async (body: InputsType) => {
         const res =
-            await instance.post('/login', {username: body.email, password: body.password})
+            await instance.post<ResponseLoginType>('/login', {username: body.email, password: body.password})
         return res.data
     },
     getUsers: async() => {
@@ -25,7 +24,14 @@ export const authApi = {
         return res.data;
     },
     me: async () => {
-        const res: AxiosResponse<{message: string, users: UserType[]}> = await instance.get('/me');
+        const res: AxiosResponse<{message: string, userName: string, id: string}> = await instance.get('/me');
         return res.data
     }
+}
+
+
+export type ResponseLoginType = {
+    token: string,
+    username: string,
+    id: string
 }

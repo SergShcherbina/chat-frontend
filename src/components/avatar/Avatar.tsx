@@ -5,7 +5,7 @@ type PropsType = {
 } & ComponentPropsWithoutRef<'div'>
 
 export const Avatar: FC<PropsType> = ({userImage, ...rest}) => {
-    const path = userImage || "https://www.blexar.com/avatar.png"
+    const path = userImage || 'https://i.pravatar.cc/300'
 
     return (
         <div {...rest} >

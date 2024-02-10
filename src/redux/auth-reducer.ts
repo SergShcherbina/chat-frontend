@@ -5,9 +5,11 @@ import {Dispatch} from "redux";
 const initialState = {
     isLoggedIn: false,
     isLoading: true,
+    userName: null,
+    userId: null
 }
 
-export const authReducer = (state: AuthInitState = initialState, action: AuthActions) => {
+export const authReducer = (state: AuthInitState = initialState, action: AuthAT) => {
     switch (action.type) {
         case "AUTH-IS-LOGGED-IN":
             return {
@@ -17,13 +19,17 @@ export const authReducer = (state: AuthInitState = initialState, action: AuthAct
             return {
                 ...state, isLoading: action.payload
             }
+        case "AUTH-SET-USER":
+            return {
+                ...state, userName: action.payload.userName, userId: action.payload.userId
+            }
         default: {
             return state
         }
     }
 }
 
-const isLoggedInAC = (isLogged: boolean) => {
+export const isLoggedInAC = (isLogged: boolean) => {
     return {
         type: "AUTH-IS-LOGGED-IN",
         payload: isLogged
@@ -35,11 +41,18 @@ const isLoadingAC = (isLoading: boolean) => {
         payload: isLoading
     } as const
 }
+const setUserAC = ({userName, userId}: {userName: string, userId: string}) => {
+    return {
+        type: "AUTH-SET-USER",
+        payload: {userName, userId}
+    } as const
+}
 
 export const loginTC = (userData: InputsType) => {
     return async (dispatch: Dispatch) => {
         try {
             const res = await authApi.login(userData)
+            dispatch(setUserAC({userName: res.username, userId: res.id}))
             localStorage.setItem('session', res.token)
             dispatch(isLoggedInAC(true))
         } catch (e: any) {
@@ -64,22 +77,25 @@ export const meTC = () => async (dispatch: Dispatch) => {
     dispatch(isLoadingAC(true))
     try{
         const res = await authApi.me()
-        console.log('meTC:', res.users)
+        console.log('meTC:', res)
         dispatch(isLoggedInAC(true))
+        dispatch(setUserAC({userName: res.userName, userId: res.id}))
     } catch(e){
         console.log('Error meTC:', e)
     } finally {
         dispatch(isLoadingAC(false))
     }
-
 }
 
 type IsLoggedInAT = ReturnType<typeof isLoggedInAC>
 type IsLoadingAT = ReturnType<typeof isLoadingAC>
+type SetUserAT = ReturnType<typeof setUserAC>
 
-type AuthActions = IsLoggedInAT | IsLoadingAT
+type AuthAT = IsLoggedInAT | IsLoadingAT | SetUserAT
 
 type AuthInitState = {
     isLoggedIn: boolean
     isLoading: boolean
+    userName: string | null,
+    userId: string | null
 }
