@@ -13,7 +13,6 @@ import '../../index.css'
 import {Rooms} from "../rooms/Rooms.tsx";
 import {useAppSelector} from "../../hooks/useAppSelector.ts";
 import {Login} from "../auth/Login.tsx";
-import {authApi} from "../../api/auth-api.ts";
 
 export type MessageType = {
     message: string;
@@ -59,12 +58,6 @@ export const MessagesList = () => {
 
     const timeMessage = ''
 
-    const getUsers =  () => {
-        authApi.getUsers().then(res => {
-            console.log(res)
-        })
-    }
-
     if(!isLoggedIn) return <Login/>
 
     return (
@@ -105,7 +98,6 @@ export const MessagesList = () => {
                             onClick={onSendMessage}>
                             {'send'}
                         </button>
-                        <button onClick={()=>getUsers()} >get Users</button>
                     </div>
                 </div>
             </div>

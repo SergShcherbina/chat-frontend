@@ -4,6 +4,7 @@ import {Dispatch} from "redux";
 
 const initialState = {
     isLoggedIn: false,
+    isLoading: true,
 }
 
 export const authReducer = (state: AuthInitState = initialState, action: AuthActions) => {
@@ -11,6 +12,10 @@ export const authReducer = (state: AuthInitState = initialState, action: AuthAct
         case "AUTH-IS-LOGGED-IN":
             return {
                 ...state, isLoggedIn: action.payload
+            }
+        case "AUTH-IS-LOADING":
+            return {
+                ...state, isLoading: action.payload
             }
         default: {
             return state
@@ -22,6 +27,12 @@ const isLoggedInAC = (isLogged: boolean) => {
     return {
         type: "AUTH-IS-LOGGED-IN",
         payload: isLogged
+    } as const
+}
+const isLoadingAC = (isLoading: boolean) => {
+    return {
+        type: "AUTH-IS-LOADING",
+        payload: isLoading
     } as const
 }
 
@@ -49,10 +60,26 @@ export const signUpTC = (signUpData: InputsType) => async () => {
     }
 }
 
-type IsLoggedInAT = ReturnType<typeof isLoggedInAC>
+export const meTC = () => async (dispatch: Dispatch) => {
+    dispatch(isLoadingAC(true))
+    try{
+        const res = await authApi.me()
+        console.log('meTC:', res.users)
+        dispatch(isLoggedInAC(true))
+    } catch(e){
+        console.log('Error meTC:', e)
+    } finally {
+        dispatch(isLoadingAC(false))
+    }
 
-type AuthActions = IsLoggedInAT
+}
+
+type IsLoggedInAT = ReturnType<typeof isLoggedInAC>
+type IsLoadingAT = ReturnType<typeof isLoadingAC>
+
+type AuthActions = IsLoggedInAT | IsLoadingAT
 
 type AuthInitState = {
     isLoggedIn: boolean
+    isLoading: boolean
 }

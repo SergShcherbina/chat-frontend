@@ -21,7 +21,11 @@ export const authApi = {
         return res.data
     },
     getUsers: async() => {
-        const res: AxiosResponse<UserType, unknown> = await instance.get('/users');
+        const res: AxiosResponse<UserType[], unknown> = await instance.get('/users');
         return res.data;
+    },
+    me: async () => {
+        const res: AxiosResponse<{message: string, users: UserType[]}> = await instance.get('/me');
+        return res.data
     }
 }

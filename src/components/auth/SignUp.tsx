@@ -14,7 +14,7 @@ type SignUpType = {
 
 export const SignUp = () => {
     const dispatch = useAppDispatch();
-    const [errorArray, setError] = useState([])
+    const [errorArray, setError] = useState<string[]>([])
     const navigate = useNavigate()
 
     const schema = yup
