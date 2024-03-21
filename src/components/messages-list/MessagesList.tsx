@@ -1,34 +1,23 @@
-import {MessageItem} from "../message-item/MessageItem.tsx";
-import {AppDispatchType, AppStateType} from "../../redux/store.ts";
-import {useDispatch, useSelector} from "react-redux";
+import {MessageItem} from "./message-item/MessageItem.tsx";
 import {createRef, useEffect, useState} from "react";
+import {messageObserver} from "../../utils/messageObserver.ts";
+import {SideBar} from "../side-bar/SideBar.tsx";
+import {useAppSelector} from "../../hooks/useAppSelector.ts";
+import {Login} from "../auth/Login.tsx";
+import {useAppDispatch} from "../../hooks/useAppDispatch.ts";
 import {
     connectionTC,
     disconnectionTC,
-    sendMessageTC,
-    writesMessageTC
 } from "../../redux/chat-reducer.ts";
-import {messageObserver} from "../../utils/messageObserver.ts";
 import '../../index.css'
-import {Rooms} from "../rooms/Rooms.tsx";
-import {useAppSelector} from "../../hooks/useAppSelector.ts";
-import {Login} from "../auth/Login.tsx";
-
-export type MessageType = {
-    message: string;
-    id: string;
-    user: UserType,
-}
-export type UserType = { id: string, name: string, room: string }
 
 
 export const MessagesList = () => {
-    const dispatch: AppDispatchType = useDispatch()
-    const messages = useSelector<AppStateType, MessageType[]>(state => state.chat.messages)
-    const usersWrites = useSelector<AppStateType, UserType[]>(state => state.chat.userWrites)
+    const dispatch = useAppDispatch()
+    const messages = useAppSelector(state => state.chat.messages)
+    // const usersWrites = useSelector<AppStateType, UserType[]>(state => state.chat.userWrites)
 
     const [value, setValue] = useState('')
-    const [roomValue, setRoomValue] = useState('')
     const myRef = createRef<HTMLDivElement>()
     const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
 
@@ -44,41 +33,35 @@ export const MessagesList = () => {
     }, [myRef])
 
     const onSendMessage = () => {
-        dispatch(sendMessageTC(value, roomValue))
+        // dispatch(sendMessageTC(value, roomValue))
         setValue('')
     }
 
     const writesMessagesHandler = () => {
-        dispatch(writesMessageTC(roomValue))
+        // dispatch(writesMessageTC(roomValue))
     }
-
-    const getRoom = (value: string) => {
-        setRoomValue(value)
-    }
-
-    const timeMessage = ''
 
     if(!isLoggedIn) return <Login/>
 
     return (
         <div className={'container mx-auto flex'}>
-            <Rooms getRoom={getRoom}/>
+            <SideBar />
 
             <div className={'flex w-full pl-2 flex-col mt-0 h-[93vh] pb-5' + ' ' + 'scrollBar'}>
 
                 <div className={'flex flex-col gap-5 my-3 overflow-y-auto flex-1'}>
-                    {messages.map((message, i) => {
+                    {messages &&  messages.map((message: string, i: number) => {
                         if (messages.length - 1 === i) {
-                            return <MessageItem key={message.id+i} {...message} time={timeMessage} ref={myRef}/>
+                            return <MessageItem key={i} message={message}  ref={myRef}/>
                         }
-                        return <MessageItem key={message.id+i} {...message} time={timeMessage}/>
+                        return <MessageItem key={i} message={message}/>
                     })}
                 </div>
 
                 <div>
-                    {usersWrites.map((u: UserType) => {
-                        return <span key={u.id}>{u.name} ... </span>
-                    })}
+                    {/*{usersWrites.map((u: UserType) => {*/}
+                    {/*    return <span key={u.userId}>{u.userName} ... </span>*/}
+                    {/*})}*/}
                 </div>
 
                 <div className="mt-5">

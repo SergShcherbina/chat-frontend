@@ -1,10 +1,10 @@
 import {createBrowserRouter, Navigate, Outlet, RouterProvider} from 'react-router-dom'
-import {MessagesList} from "../messages-list/MessagesList.tsx";
-import {Login} from "../auth/Login.tsx";
-import {SignUp} from "../auth/SignUp.tsx";
-import {Layout} from "../layout/Layout.tsx";
-import {NotFound} from "../not-found/NotFound.tsx";
-import {useAppSelector} from "../../hooks/useAppSelector.ts";
+import {MessagesList} from "../components/messages-list/MessagesList.tsx";
+import {Login} from "../components/auth/Login.tsx";
+import {SignUp} from "../components/auth/SignUp.tsx";
+import {Layout} from "../components/layout/Layout.tsx";
+import {NotFound} from "../components/404-page/404-page.tsx";
+import {useAppSelector} from "../hooks/useAppSelector.ts";
 
 const router = createBrowserRouter([
     {

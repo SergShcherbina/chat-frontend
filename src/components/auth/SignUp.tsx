@@ -3,7 +3,7 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import {InputsType} from "./Login.tsx";
 import {Link, useNavigate} from 'react-router-dom'
 import * as yup from "yup";
-import {signUpTC} from "../../redux/auth-reducer.ts";
+import {signUp} from "../../redux/auth-reducer.ts";
 import {useAppDispatch} from "../../hooks/useAppDispatch.ts";
 import {useState} from "react";
 import {useByTimeClearErrors} from "../../hooks/useClearMessage.ts";
@@ -34,8 +34,8 @@ export const SignUp = () => {
     })
 
     const onSubmit = (signUpData: SignUpType) => {
-        dispatch(signUpTC({email: signUpData.email, password: signUpData.password}))
-            .then(res => {
+        dispatch(signUp({email: signUpData.email, password: signUpData.password})).unwrap()
+            .catch(res => {
                 if (res.errors) {
                     setError(res.errors)
                     return

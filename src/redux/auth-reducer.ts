@@ -1,101 +1,101 @@
-import {authApi} from "../api/auth-api.ts";
+import {authApi, ResponseMeType} from "../api/auth-api.ts";
 import {InputsType} from "../components/auth/Login.tsx";
-import {Dispatch} from "redux";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 
-const initialState = {
+const initialState: AuthInitStateType = {
     isLoggedIn: false,
     isLoading: true,
     userName: null,
-    userId: null
+    userId: null,
 }
 
-export const authReducer = (state: AuthInitState = initialState, action: AuthAT) => {
-    switch (action.type) {
-        case "AUTH-IS-LOGGED-IN":
-            return {
-                ...state, isLoggedIn: action.payload
+const slice = createSlice({
+        name: "auth",
+        initialState,
+        reducers: {
+            isLoggedInAC(state, action: PayloadAction<boolean>) {
+                state.isLoggedIn = action.payload
+            },
+            isLoadingAC(state, action: PayloadAction<boolean>){
+                state.isLoading = action.payload
             }
-        case "AUTH-IS-LOADING":
-            return {
-                ...state, isLoading: action.payload
-            }
-        case "AUTH-SET-USER":
-            return {
-                ...state, userName: action.payload.userName, userId: action.payload.userId
-            }
-        default: {
-            return state
+        },
+        extraReducers: (builder) => {
+            builder
+                .addCase(login.fulfilled, (state, action) => {
+                state.userName = action.payload.userName
+            })
+            builder
+                .addCase(me.fulfilled, (state, action) => {
+                state.userName = action.payload.userName
+                state.userId = action.payload.userId
+            })
+    }
+});
+
+export const authReducer = slice.reducer
+export const { isLoggedInAC, isLoadingAC } = slice.actions
+
+
+
+export const signUp = createAsyncThunk<void, InputsType>("auth/signUp",
+    async (signUpData: InputsType, {dispatch, rejectWithValue}) => {
+    dispatch(isLoadingAC(true))
+        try{
+            await authApi.login(signUpData)
+            return
+        } catch (e: any) {
+            console.log('signUpTC:', e)
+            return rejectWithValue(e && e.response.data)
+        } finally {
+            dispatch(isLoadingAC(false))
         }
     }
-}
+);
 
-export const isLoggedInAC = (isLogged: boolean) => {
-    return {
-        type: "AUTH-IS-LOGGED-IN",
-        payload: isLogged
-    } as const
-}
-const isLoadingAC = (isLoading: boolean) => {
-    return {
-        type: "AUTH-IS-LOADING",
-        payload: isLoading
-    } as const
-}
-const setUserAC = ({userName, userId}: {userName: string, userId: string}) => {
-    return {
-        type: "AUTH-SET-USER",
-        payload: {userName, userId}
-    } as const
-}
-
-export const loginTC = (userData: InputsType) => {
-    return async (dispatch: Dispatch) => {
+export const login = createAsyncThunk<{userName: string}, InputsType>(
+    "auth/login",
+    async (userData: InputsType , {dispatch, rejectWithValue}) => {
+        dispatch(isLoadingAC(true))
         try {
-            const res = await authApi.login(userData)
-            dispatch(setUserAC({userName: res.username, userId: res.id}))
-            localStorage.setItem('session', res.token)
+            const response = await authApi.login(userData)
             dispatch(isLoggedInAC(true))
+            localStorage.setItem('session', response.token)
+            return {userName: response.username}
         } catch (e: any) {
             console.log('Error loginTC:', e)
-            return e?.response.data
+            return rejectWithValue(e && e.response.data)
+        } finally {
+            dispatch(isLoadingAC(false))
         }
     }
-};
+);
 
-export const signUpTC = (signUpData: InputsType) => async () => {
-    try {
-        const res =  await authApi.signUp(signUpData)
-        console.log('signUpTC:', res)
-        return res
-    } catch (e: any) {
-        console.log('signUpTC:', e)
-        return e?.response.data
+export const me = createAsyncThunk<UserType, void>("auth/me",
+    async (_void, {dispatch, rejectWithValue}) => {
+        dispatch(isLoadingAC(true))
+        try{
+            const { userName, userId }: ResponseMeType = await authApi.me()
+            dispatch(isLoggedInAC(true))
+            return {userName, userId}
+        } catch (e: any) {
+            console.log('Error meTC:', e)
+            return rejectWithValue(e && e.response.data)
+        } finally {
+            dispatch(isLoadingAC(false))
+        }
     }
-}
+);
 
-export const meTC = () => async (dispatch: Dispatch) => {
-    dispatch(isLoadingAC(true))
-    try{
-        const res = await authApi.me()
-        console.log('meTC:', res)
-        dispatch(isLoggedInAC(true))
-        dispatch(setUserAC({userName: res.userName, userId: res.id}))
-    } catch(e){
-        console.log('Error meTC:', e)
-    } finally {
-        dispatch(isLoadingAC(false))
-    }
-}
 
-type IsLoggedInAT = ReturnType<typeof isLoggedInAC>
-type IsLoadingAT = ReturnType<typeof isLoadingAC>
-type SetUserAT = ReturnType<typeof setUserAC>
-
-type AuthAT = IsLoggedInAT | IsLoadingAT | SetUserAT
-
-type AuthInitState = {
-    isLoggedIn: boolean
-    isLoading: boolean
+type AuthInitStateType = {
+    isLoggedIn: boolean,
+    isLoading: boolean,
     userName: string | null,
     userId: string | null
+}
+
+export type UserType = {
+    userName: string,
+    userId: string
 }

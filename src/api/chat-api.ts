@@ -1,40 +1,52 @@
 import {io, Socket} from 'socket.io-client';
-import {MessageType, UserType} from "../components/messages-list/MessagesList.tsx";
+// import {UserType} from "../redux/auth-reducer.ts";
 
 const URL = 'http://localhost:3000' || 'https://chat-backend-git-main-sergshcherbina.vercel.app/'
 
 export const api = {
     socket: null as null | Socket,
     createConnection() {
-        this.socket = io(URL, {autoConnect: true})
+        this.socket = io(URL, {autoConnect: true, reconnection: true});
     },
     subscribe(
-        addMessage: (message: MessageType) => void,
-        setMessages: (messages: MessageType[]) => void,
-        userWrites: (user: UserType) => void,
-        setUserId: (userId: string) => void,
-        counterUsersRoomHandler: (obj: { countUsersRoom: string, message: string }) => void
+        // addMessage: (message: any) => void,
+        // setMessages: (messages: any) => void,
+        // userWrites: (user: UserType) => void,
+        // setUserId: (userId: string) => void,
+        joinToRoomHandler: (obj: { countUsersToRoom: number, activeRoomName: string }) => void,
+        messageHandler: (obj: { message: string }) => void
     ) {
-        this.socket?.on('new-message-send', addMessage );
-        this.socket?.on('init-messages-published', setMessages);
-        this.socket?.on('writes', userWrites)
-        this.socket?.on('set-userId', setUserId);
-        this.socket?.on('join', counterUsersRoomHandler);
+        // this.socket?.on('new-message-send', addMessage );
+        // this.socket?.on('init-messages-published', setMessages);
+        // this.socket?.on('writes', userWrites)
+        // this.socket?.on('set-userId', setUserId);
+        this.socket?.on('joinUserToRoom', messageHandler);
+        this.socket?.on('youJoin', messageHandler );
+        this.socket?.on('join', joinToRoomHandler );
     },
     disconnect() {
         this.socket?.off('init-messages-published');
         this.socket?.off('new-message-send');
-        this.socket?.off('writes');
-        this.socket?.off('set-userId');
+        this.socket?.off('joinUserToRoom');
+        this.socket?.off('youJoin');
         this.socket?.off('join');
     },
-    sendMessage(obj: { textMessage: string, room: string }, errorCallBack: (errorMessage: string) => void) {
-        this.socket?.emit('client-message-send', obj, errorCallBack)
+    // sendMessage(obj: { textMessage: string, room: string }, errorCallBack: (errorMessage: string) => void) {
+    //     this.socket?.emit('client-message-send', obj, errorCallBack)
+    // },
+    createRoom(userData: CreateRoomType, errorCallBack: (errorMessage: string) => void ) {
+        this.socket?.emit('createRoom', userData, errorCallBack)
     },
-    sendUserName(userName: string | null, room: string) {
-        this.socket?.emit('join', {userName, room})
-    },
-    writesMessage(roomValue: string) {
-        this.socket?.emit('writes', roomValue)
-    },
+    // writesMessage(roomValue: string) {
+    //     this.socket?.emit('writes', roomValue)
+    // },
+
+
+}
+
+
+type CreateRoomType = {
+    userName: string | null,
+    userId: string | null,
+    roomName: string,
 }

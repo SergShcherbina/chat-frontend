@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import {loginTC} from "../../redux/auth-reducer.ts";
+import {login} from "../../redux/auth-reducer.ts";
 import {useAppDispatch} from "../../hooks/useAppDispatch.ts";
 import {useForm, SubmitHandler} from "react-hook-form"
 import * as yup from "yup"
@@ -38,8 +38,9 @@ export const Login = () => {
     })
 
     const onSubmit: SubmitHandler<InputsType> = (data) => {
-        dispatch(loginTC(data)).then(res => {
-            setErrors(res?.errors)
+        dispatch(login(data)).unwrap()
+        .catch(e => {
+            setErrors(e.errors)
         })
     }
 
@@ -78,7 +79,7 @@ export const Login = () => {
                     </div>
 
                     <div>
-                        {errorArray.map(err => <div className={'text-red-500 pb-2'}>{err}</div>)}
+                        {errorArray.map(err => <div key={err} className={'text-red-500 pb-2'}>{err}</div>)}
                         <button type="submit"
                                 className="flex w-full justify-center rounded-md bg-orange-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-900">
                             Sign in

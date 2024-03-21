@@ -1,5 +1,4 @@
 import axios, {AxiosResponse} from "axios";
-import {UserType} from "./types.ts";
 import {InputsType} from "../components/auth/Login.tsx";
 const token = localStorage && localStorage.getItem('session')
 
@@ -14,17 +13,17 @@ export const authApi = {
     signUp: async (body: InputsType) => {
         return await instance.post<{message: string}>('/registration', {username: body.email, password: body.password})
     },
-    login: async (body: InputsType) => {
-        const res =
+    login: async (body: InputsType)  => {
+        const res=
             await instance.post<ResponseLoginType>('/login', {username: body.email, password: body.password})
         return res.data
     },
     getUsers: async() => {
-        const res: AxiosResponse<UserType[], unknown> = await instance.get('/users');
+        const res: AxiosResponse<any, unknown> = await instance.get('/users');
         return res.data;
     },
-    me: async () => {
-        const res: AxiosResponse<{message: string, userName: string, id: string}> = await instance.get('/me');
+    me: async (): Promise<ResponseMeType> => {
+        const res: AxiosResponse<ResponseMeType> = await instance.get('/me');
         return res.data
     }
 }
@@ -33,5 +32,11 @@ export const authApi = {
 export type ResponseLoginType = {
     token: string,
     username: string,
-    id: string
+    userId: string
+}
+
+export type ResponseMeType = {
+    message: string,
+    userName: string,
+    userId: string
 }
