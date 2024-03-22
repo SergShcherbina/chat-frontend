@@ -1,0 +1,5 @@
+export {Avatar} from "./avatar/Avatar.tsx"
+export {Layout} from "./layout/Layout.tsx"
+export {MessageItem} from "./message-item/MessageItem.tsx"
+export {MessagesList} from "./messages-list/MessagesList.tsx"
+export {SideBar} from "./side-bar/SideBar.tsx"
