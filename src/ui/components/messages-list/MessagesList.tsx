@@ -19,8 +19,12 @@ export const MessagesList = () => {
     const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
 
     useEffect(() => {
-        dispatch(connectionTC())
+        // const timer = setTimeout(() => {
+            dispatch(connectionTC())
+        // }, 100)
+
         return () => {
+            // clearTimeout(timer)
             dispatch(disconnectionTC())
         }
     }, []);

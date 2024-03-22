@@ -1,6 +1,7 @@
 import { useState} from "react";
 import {useAppSelector, useAppDispatch} from "../../../common";
 import {createRoomTC} from "../../../model/redux";
+import {UserRoomsList} from "../user-rooms-list/UserRoomsList.tsx";
 
 
 export const SideBar = () => {
@@ -14,11 +15,15 @@ export const SideBar = () => {
     }
 
     return (
-        <div className={'w-52 p-2 border-r'}>
+        <aside className={'w-52 p-2 border-r'}>
             <h2>{userName}</h2>
 
             <ul className={'border-b mb-3'}>
-                <span >{`${countUsersToRoom}`} users in the room </span>
+                <li>
+                    <button>
+                        <span >{`${countUsersToRoom}`} users in the room </span>
+                    </button>
+                </li>
             </ul>
 
             <div className={'mb-3 flex'}>
@@ -35,6 +40,7 @@ export const SideBar = () => {
                     >send room
                 </button>
             </div>
-        </div>
+            <UserRoomsList/>
+        </aside>
     );
 };

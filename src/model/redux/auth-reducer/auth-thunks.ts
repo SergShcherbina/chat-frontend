@@ -32,6 +32,7 @@ export const login =
         try {
             const response = await authApi.login(userData)
             localStorage.setItem('session', response.token)
+            localStorage.setItem('chatUserId', response.userId)
             return {userName: response.username}
         } catch (e) {
             if(isAxiosError(e)){

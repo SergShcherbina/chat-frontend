@@ -9,8 +9,11 @@ export const connectionTC = createAsyncThunk(
         try {
              chatApi.createConnection();
              chatApi.subscribe(
-                ({countUsersToRoom, activeRoomName}) => {
-                    thunkAPI.dispatch(chatActions.setRoomInfo({countUsersToRoom, activeRoomName}))
+                 ( userRooms ) => {
+                     thunkAPI.dispatch(chatActions.setAllRooms(userRooms))
+                 },
+                ({ userRoom, message , countUsersToRoom }) => {
+                    thunkAPI.dispatch(chatActions.joinToRoom( {userRoom, message, countUsersToRoom } ))
                 },
                 ({message}) => {
                     thunkAPI.dispatch(chatActions.addMessageJoining(message))

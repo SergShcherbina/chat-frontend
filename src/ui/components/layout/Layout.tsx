@@ -4,13 +4,14 @@ import {useAppSelector} from "../../../common";
 import {isLoggedIn} from "../../../model/redux";
 
 export const Layout = () => {
-    const activeRoomName = useAppSelector(state => state.chat.activeRoomName)
+    const currentRoomName = useAppSelector(state => state.chat.currentRoomName)
 
     const dispatch = useAppDispatch()
 
     const logOut = () => {
         dispatch(isLoggedIn(false))
         localStorage.removeItem('session')
+        localStorage.removeItem('chatUserId')
     }
 
     return (
@@ -22,7 +23,7 @@ export const Layout = () => {
                         <div className={'self-center'}>
 
                             Current room:
-                            <b> {activeRoomName}</b>
+                            <b> {currentRoomName}</b>
                         </div>
 
                         <button
