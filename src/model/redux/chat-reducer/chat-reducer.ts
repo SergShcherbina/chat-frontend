@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {ResponseJoinType, userRoomType} from "../../api/chat-api.ts";
+import {ResponseJoinType, UserRoomType} from "../../api/chat-api.ts";
 
 const slice = createSlice({
     name: "chat",
@@ -14,11 +14,12 @@ const slice = createSlice({
             state.countUsersToRoom = action.payload.countUsersToRoom;
             state.currentRoomName = action.payload.userRoom.roomName;
             state.userRooms.unshift(action.payload.userRoom)
+            state.messages.push(action.payload.message)
         },
         addMessageJoining(state, action: PayloadAction<string>) {
             state.messages.push(action.payload)
         },
-        setAllRooms(state, action: PayloadAction<userRoomType[]>) {
+        setAllRooms(state, action: PayloadAction<UserRoomType[]>) {
             state.userRooms = action.payload
         }
     }
@@ -33,5 +34,5 @@ type ChatInitialType = {
     messages: string[]
     currentRoomName: string
     countUsersToRoom: number
-    userRooms: userRoomType[]
+    userRooms: UserRoomType[]
 }

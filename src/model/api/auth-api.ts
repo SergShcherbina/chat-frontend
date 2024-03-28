@@ -11,11 +11,11 @@ const instance = axios.create({
 
 export const authApi = {
     signUp: async (body: InputsType) => {
-        return await instance.post<{message: string}>('/registration', {username: body.email, password: body.password})
+        return await instance.post<{message: string}>('/registration', {userName: body.email, password: body.password})
     },
     login: async (body: InputsType)  => {
         const res=
-            await instance.post<ResponseLoginType>('/login', {username: body.email, password: body.password})
+            await instance.post<ResponseLoginType>('/login', {userName: body.email, password: body.password})
         return res.data
     },
     getUsers: async() => {
@@ -32,7 +32,7 @@ export const authApi = {
 //Types
 export type ResponseLoginType = {
     token: string,
-    username: string,
+    userName: string,
     userId: string
 }
 

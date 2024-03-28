@@ -17,7 +17,12 @@ export const connectionTC = createAsyncThunk(
                 },
                 ({message}) => {
                     thunkAPI.dispatch(chatActions.addMessageJoining(message))
-                })
+                },
+                 (rooms) => {
+                     debugger
+                     thunkAPI.dispatch(chatActions.setAllRooms(rooms))
+             })
+
             return {countUsersToRoom: 0, activeRoomName: ''}
         } catch (e) {
             debugger
@@ -34,6 +39,17 @@ export const createRoomTC = createAsyncThunk("chat/createRoom",
         try {
             const {userName, userId} = (getState() as AppStateType).auth
             chatApi.createRoom({userName, roomName, userId}, errorCallBack)
+        } catch (e) {
+            debugger
+            return rejectWithValue(e)
+        }
+    }
+);
+
+export const searchRoomTC = createAsyncThunk("chat/searchRoom",
+    async (roomName: string, {rejectWithValue }) => {
+        try {
+           await chatApi.searchRoom(roomName)
         } catch (e) {
             debugger
             return rejectWithValue(e)

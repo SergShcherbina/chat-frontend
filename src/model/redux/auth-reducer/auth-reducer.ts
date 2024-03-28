@@ -4,8 +4,8 @@ import {login, me} from "./auth-thunks.ts";
 const initialState: AuthInitStateType = {
     isLoggedIn: false,
     isLoading: true,
-    userName: null,
-    userId: null,
+    userName: '',
+    userId: '',
     errors: [],
 };
 
@@ -60,8 +60,8 @@ export const {isLoggedIn} = slice.actions
 type AuthInitStateType = {
     isLoggedIn: boolean,
     isLoading: boolean,
-    userName: string | null,
-    userId: string | null
+    userName: string ,
+    userId: string ,
     errors: string[]
 }
 

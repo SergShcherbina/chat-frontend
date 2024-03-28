@@ -1,8 +1,8 @@
 import {createBrowserRouter, Navigate, Outlet, RouterProvider} from 'react-router-dom'
-import {MessagesList} from "../components/messages-list/MessagesList.tsx";
-import {Login} from "../pages/auth/Login.tsx";
-import {SignUp} from "../pages/auth/SignUp.tsx";
-import {Layout} from "../components/layout/Layout.tsx";
+import {MessagesList} from "../components";
+import {Login} from "../pages/auth";
+import {SignUp} from "../pages/auth";
+import {Layout} from "../components";
 import {NotFound} from "../pages/404-page/404-page.tsx";
 import {useAppSelector} from "../../common";
 

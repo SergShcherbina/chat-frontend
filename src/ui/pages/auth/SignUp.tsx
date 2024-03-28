@@ -35,13 +35,13 @@ export const SignUp = () => {
 
     const onSubmit = (signUpData: SignUpType) => {
         dispatch(signUp({email: signUpData.email, password: signUpData.password})).unwrap()
-            .catch(res => {
-                if (res.errors) {
-                    setError(res.errors)
+            .then(() => {
+                navigate('/login')
+            })
+            .catch(error => {
+                if (error) {
+                    setError([error])
                     return
-                }
-                if (res.data.message) {
-                    navigate('/login')
                 }
             })
     }

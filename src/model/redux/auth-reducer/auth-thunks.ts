@@ -33,7 +33,7 @@ export const login =
             const response = await authApi.login(userData)
             localStorage.setItem('session', response.token)
             localStorage.setItem('chatUserId', response.userId)
-            return {userName: response.username}
+            return {userName: response.userName}
         } catch (e) {
             if(isAxiosError(e)){
                 const errorMessage = e.message || e.response?.data.errors[0]

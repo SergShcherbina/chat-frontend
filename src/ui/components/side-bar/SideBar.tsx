@@ -1,6 +1,6 @@
 import { useState} from "react";
 import {useAppSelector, useAppDispatch} from "../../../common";
-import {createRoomTC} from "../../../model/redux";
+import {createRoomTC, searchRoomTC} from "../../../model/redux";
 import {UserRoomsList} from "../user-rooms-list/UserRoomsList.tsx";
 
 
@@ -9,9 +9,14 @@ export const SideBar = () => {
     const userName = useAppSelector(state => state.auth.userName)
     const countUsersToRoom = useAppSelector(state => state.chat.countUsersToRoom)
     const [room, setRoomName] = useState("")
+    const [searchName, setSearchName] = useState("")
 
     const createRoomHandler = () => {
         dispatch(createRoomTC(room))
+    }
+
+    const searchRoomHandler = () => {
+        dispatch(searchRoomTC(searchName))
     }
 
     return (
@@ -26,18 +31,32 @@ export const SideBar = () => {
                 </li>
             </ul>
 
-            <div className={'mb-3 flex'}>
+            <div className={'mb-3 flex gap-1'}>
                 <input
                     value={room}
-                    placeholder={'room'}
+                    placeholder={'new room'}
                     onChange={(e) => setRoomName(e.currentTarget.value)}
                     type="text" name="room" id="room" autoComplete="given-name"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
 
                 <button
                     onClick={createRoomHandler}
-                    className={'border rounded-lg'}
-                    >send room
+                    className={'border rounded-lg px-1'}
+                    >create
+                </button>
+            </div>
+            <div className={'mb-3 flex gap-1'}>
+                <input
+                    value={searchName}
+                    placeholder={'search room'}
+                    onChange={(e) => setSearchName(e.currentTarget.value)}
+                    type="text" name="room" id="room" autoComplete="given-name"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
+
+                <button
+                    onClick={searchRoomHandler}
+                    className={'border rounded-lg px-1'}
+                >search
                 </button>
             </div>
             <UserRoomsList/>
