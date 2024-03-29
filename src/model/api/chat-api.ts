@@ -1,4 +1,5 @@
 import {io, Socket} from 'socket.io-client';
+import {UserType} from "../redux";
 
 const URL = 'http://localhost:3000' || 'https://chat-backend-git-main-sergshcherbina.vercel.app/'
 const userId = localStorage && localStorage.getItem("chatUserId")
@@ -14,25 +15,24 @@ export const chatApi = {
         });
     },
     subscribe(
-        getRoomsHandler: (userRooms: UserRoomType[]) => void,
+        setRoomsHandler: (userRooms: UserRoomType[]) => void,
         firstConnectToRoomHandler: (responseJoinObj: ResponseFirstConnectType) => void,
         messageHandler: (obj: { message: string }) => void,
         connectToRoomHandler: (responseConnectObj: ResponseConnectType) => void,
-        setCountUserToRoom:(countUsersToRoom: number) => void
+        setCountUsersToRoomHandler:(countUsersToRoom: number) => void
     ) {
-        this.socket?.on('connection', getRoomsHandler);
+        this.socket?.on('connection', setRoomsHandler);
         this.socket?.on('firstConnectToRoom', firstConnectToRoomHandler );
-        this.socket?.on('guestFirstConnectToRom', messageHandler);
-        this.socket?.on("searchRooms", getRoomsHandler)
+        this.socket?.on('sendMessage', messageHandler);
+        this.socket?.on("userRooms", setRoomsHandler)
         this.socket?.on('connectToRoom', connectToRoomHandler)
-        this.socket?.on('countUsersToRoom', setCountUserToRoom)
-
+        this.socket?.on('countUsersToRoom', setCountUsersToRoomHandler)
     },
     disconnect() {
         this.socket?.off('connection');
         this.socket?.off('firstConnectToRoom');
-        this.socket?.off('guestFirstConnectToRom');
-        this.socket?.off("searchRooms")
+        this.socket?.off('sendMessage');
+        this.socket?.off("userRooms")
         this.socket?.off('connectToRoom')
         this.socket?.off('countUsersToRoom')
 
@@ -40,11 +40,14 @@ export const chatApi = {
     createRoom(userData: CreateRoomType, errorCallBack: (errorMessage: string) => void ) {
         this.socket?.emit('createRoom', userData, errorCallBack)
     },
-    searchRoom(roomName: string) {
+    searchRooms(roomName: string) {
         this.socket?.emit('searchRoom', roomName)
     },
     connectToRoom(userData: CreateRoomType) {
         this.socket?.emit('connectToRoom', userData)
+    },
+    leaveRoom(data: UserRoomType | UserType) {
+        this.socket?.emit('leaveRoom', data)
     }
 }
 
@@ -56,7 +59,6 @@ type CreateRoomType = {
     roomName: string,
 }
 export type ResponseFirstConnectType = {
-    countUsersToRoom: number,
     message: string
     userRoom: UserRoomType
 }

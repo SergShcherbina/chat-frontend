@@ -4,15 +4,14 @@ import {ResponseConnectType, ResponseFirstConnectType, UserRoomType} from "../..
 const slice = createSlice({
     name: "chat",
     initialState: {
-        currentRoomName: '',
+        currentRoom: {roomName: '', roomId: ''},
         countUsersToRoom: 0,
         userRooms: [],
         messages: [] ,
     } as ChatInitialType,
     reducers: {
         firstConnectToRoom(state, action: PayloadAction<ResponseFirstConnectType>) {
-            state.countUsersToRoom = action.payload.countUsersToRoom;
-            state.currentRoomName = action.payload.userRoom.roomName;
+            state.currentRoom = action.payload.userRoom
             state.userRooms.unshift(action.payload.userRoom)
             state.messages.push(action.payload.message)
         },
@@ -24,7 +23,7 @@ const slice = createSlice({
         },
         connectToRoom(state, action: PayloadAction<ResponseConnectType>) {
             state.countUsersToRoom = action.payload.countUsersToRoom;
-            state.currentRoomName = action.payload.userRoom.roomName;
+            state.currentRoom = action.payload.userRoom;
         },
         setCountUsersToRoom(state, action: PayloadAction<number>) {
             state.countUsersToRoom = action.payload
@@ -39,7 +38,7 @@ export const chatActions = slice.actions
 //Types
 type ChatInitialType = {
     messages: string[]
-    currentRoomName: string
+    currentRoom: UserRoomType
     countUsersToRoom: number
     userRooms: UserRoomType[]
 }

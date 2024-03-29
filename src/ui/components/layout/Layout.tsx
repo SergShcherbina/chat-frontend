@@ -1,10 +1,10 @@
 import {Outlet} from 'react-router-dom';
 import {useAppDispatch} from "../../../common";
 import {useAppSelector} from "../../../common";
-import {isLoggedIn} from "../../../model/redux";
+import {isLoggedIn, leaveRoomTC} from "../../../model/redux";
 
 export const Layout = () => {
-    const currentRoomName = useAppSelector(state => state.chat.currentRoomName)
+    const {roomName, roomId} = useAppSelector(state => state.chat.currentRoom)
 
     const dispatch = useAppDispatch()
 
@@ -14,17 +14,28 @@ export const Layout = () => {
         localStorage.removeItem('chatUserId')
     }
 
+    const leaveRoomHandler = () => {
+        dispatch(leaveRoomTC({roomName, roomId}))
+    }
+
     return (
         <div className={'h-screen flex flex-col'}>
             <header className={'flex justify-center border-b bg-orange-500'}>
 
                     <div className={'container flex justify-between py-3 text-xl font-medium'}>
+                        <div className={"flex gap-3"}>
+                            <div className={'self-center'}>
 
-                        <div className={'self-center'}>
+                                Current room:
+                                <b> {roomName}</b>
+                            </div>
 
-                            Current room:
-                            <b> {currentRoomName}</b>
+                            {roomName && <button
+                                className={'border py-1 px-4 rounded-md hover:translate-x-0.5 hover:bg-orange-400 transition left-0'} onClick={leaveRoomHandler}>
+                                leave {roomName} <span>&rarr;</span>
+                            </button>}
                         </div>
+
 
                         <button
                             className={'border py-1 px-4 rounded-md hover:translate-x-0.5 hover:bg-orange-400 transition'}

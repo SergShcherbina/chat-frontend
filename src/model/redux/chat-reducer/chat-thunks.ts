@@ -2,6 +2,7 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import {chatApi} from "../../api";
 import {AppStateType} from "../store.ts";
 import {chatActions} from "./chat-reducer.ts";
+import {UserRoomType} from "../../api/chat-api.ts";
 
 export const connectionTC = createAsyncThunk(
     "chat/connection",
@@ -12,8 +13,8 @@ export const connectionTC = createAsyncThunk(
                  ( userRooms ) => {
                      thunkAPI.dispatch(chatActions.setRooms(userRooms))
                  },
-                ({ userRoom, message , countUsersToRoom}) => {
-                    thunkAPI.dispatch(chatActions.firstConnectToRoom( {userRoom, message, countUsersToRoom} ))
+                ({ userRoom, message}) => {
+                    thunkAPI.dispatch(chatActions.firstConnectToRoom( {userRoom, message} ))
                 },
                 ({message}) => {
                     thunkAPI.dispatch(chatActions.addMessageJoining(message))
@@ -21,8 +22,8 @@ export const connectionTC = createAsyncThunk(
                  ({countUsersToRoom, userRoom}) => {
                      thunkAPI.dispatch(chatActions.connectToRoom({countUsersToRoom, userRoom}))
                  },
-                 (countUserToRoom) => {
-                     thunkAPI.dispatch(chatActions.setCountUsersToRoom(countUserToRoom))
+                 (countUsersToRoom) => {
+                     thunkAPI.dispatch(chatActions.setCountUsersToRoom(countUsersToRoom))
                  }
              )
 
@@ -52,7 +53,7 @@ export const createRoomTC = createAsyncThunk("chat/createRoom",
 export const searchRoomTC = createAsyncThunk("chat/searchRoom",
     async (roomName: string, {rejectWithValue }) => {
         try {
-           chatApi.searchRoom(roomName)
+           chatApi.searchRooms(roomName)
         } catch (e) {
             debugger
             return rejectWithValue(e)
@@ -65,6 +66,18 @@ export const connectToRoomTC = createAsyncThunk("chat/joinToRoom",
         try {
             const{userName, userId} = (getState() as AppStateType).auth
             chatApi.connectToRoom({roomName, userName, userId})
+        } catch (e) {
+            debugger
+            return rejectWithValue(e)
+        }
+    }
+)
+
+export const leaveRoomTC = createAsyncThunk("chat/leaveRoom",
+    async ({roomName, roomId}: UserRoomType, {rejectWithValue, getState }) => {
+        try {
+            const{userName, userId} = (getState() as AppStateType).auth
+            chatApi.leaveRoom({roomName, roomId,  userName, userId})
         } catch (e) {
             debugger
             return rejectWithValue(e)
