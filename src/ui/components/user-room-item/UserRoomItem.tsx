@@ -7,11 +7,11 @@ type PropsType = {
 }
 
 export const UserRoomItem: FC<PropsType> = ({roomName, roomId, onClickRoom}) => {
-
+    console.log(roomId)
     return (
         <li >
             <button
-                onClick={() => onClickRoom(roomId)}
+                onClick={() => onClickRoom(roomName)}
                 className={"w-full h-10 text-left hover:bg-gray-700"}
             >
                 {roomName}

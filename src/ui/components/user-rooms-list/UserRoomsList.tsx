@@ -1,11 +1,12 @@
-import {useAppSelector} from "../../../common";
+import {useAppDispatch, useAppSelector} from "../../../common";
 import {UserRoomItem} from "../user-room-item/UserRoomItem.tsx";
+import {connectToRoomTC} from "../../../model/redux";
 
 
 export const UserRoomsList = () => {
-    const onClickRoom = (roomId : string) => {
-
-        alert("roomId: " + roomId)
+    const dispatch = useAppDispatch()
+    const onClickRoom = (roomName : string) => {
+        dispatch(connectToRoomTC(roomName))
     }
 
     const userRooms = useAppSelector(state => state.chat.userRooms)

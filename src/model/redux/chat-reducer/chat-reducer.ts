@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {ResponseJoinType, UserRoomType} from "../../api/chat-api.ts";
+import {ResponseConnectType, ResponseFirstConnectType, UserRoomType} from "../../api/chat-api.ts";
 
 const slice = createSlice({
     name: "chat",
@@ -10,7 +10,7 @@ const slice = createSlice({
         messages: [] ,
     } as ChatInitialType,
     reducers: {
-        joinToRoom(state, action: PayloadAction<ResponseJoinType>) {
+        firstConnectToRoom(state, action: PayloadAction<ResponseFirstConnectType>) {
             state.countUsersToRoom = action.payload.countUsersToRoom;
             state.currentRoomName = action.payload.userRoom.roomName;
             state.userRooms.unshift(action.payload.userRoom)
@@ -21,6 +21,13 @@ const slice = createSlice({
         },
         setRooms(state, action: PayloadAction<UserRoomType[]>) {
             state.userRooms = action.payload
+        },
+        connectToRoom(state, action: PayloadAction<ResponseConnectType>) {
+            state.countUsersToRoom = action.payload.countUsersToRoom;
+            state.currentRoomName = action.payload.userRoom.roomName;
+        },
+        setCountUsersToRoom(state, action: PayloadAction<number>) {
+            state.countUsersToRoom = action.payload
         }
     }
 })
