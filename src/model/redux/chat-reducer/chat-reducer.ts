@@ -19,7 +19,7 @@ const slice = createSlice({
         addMessageJoining(state, action: PayloadAction<string>) {
             state.messages.push(action.payload)
         },
-        setAllRooms(state, action: PayloadAction<UserRoomType[]>) {
+        setRooms(state, action: PayloadAction<UserRoomType[]>) {
             state.userRooms = action.payload
         }
     }

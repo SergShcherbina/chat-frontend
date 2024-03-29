@@ -14,15 +14,14 @@ export const chatApi = {
         });
     },
     subscribe(
-        getAllRoomsHandler: (userRooms: UserRoomType[]) => void,
+        getRoomsHandler: (userRooms: UserRoomType[]) => void,
         joinToRoomHandler: (responseJoinObj: ResponseJoinType) => void,
         messageHandler: (obj: { message: string }) => void,
-        setFoundRooms: (rooms: any) => void
     ) {
-        this.socket?.on('connection', getAllRoomsHandler);
+        this.socket?.on('connection', getRoomsHandler);
         this.socket?.on('guestJoinToRom', messageHandler);
         this.socket?.on('joinToRoom', joinToRoomHandler );
-        this.socket?.on("searchRooms", setFoundRooms)
+        this.socket?.on("searchRooms", getRoomsHandler)
 
     },
     disconnect() {
@@ -51,10 +50,6 @@ export type ResponseJoinType = {
 }
 export type UserRoomType = {
     roomId: string,
-    roomName: string
-}
-export type SearchRoomType = {
-    userId: string
     roomName: string
 }
 

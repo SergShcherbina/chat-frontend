@@ -10,18 +10,14 @@ export const connectionTC = createAsyncThunk(
              chatApi.createConnection();
              chatApi.subscribe(
                  ( userRooms ) => {
-                     thunkAPI.dispatch(chatActions.setAllRooms(userRooms))
+                     thunkAPI.dispatch(chatActions.setRooms(userRooms))
                  },
                 ({ userRoom, message , countUsersToRoom }) => {
                     thunkAPI.dispatch(chatActions.joinToRoom( {userRoom, message, countUsersToRoom } ))
                 },
                 ({message}) => {
                     thunkAPI.dispatch(chatActions.addMessageJoining(message))
-                },
-                 (rooms) => {
-                     debugger
-                     thunkAPI.dispatch(chatActions.setAllRooms(rooms))
-             })
+                })
 
             return {countUsersToRoom: 0, activeRoomName: ''}
         } catch (e) {
