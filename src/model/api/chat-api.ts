@@ -19,12 +19,14 @@ export const chatApi = {
         firstConnectToRoomHandler: (responseJoinObj: ResponseFirstConnectType) => void,
         messageHandler: (obj: { message: string }) => void,
         connectToRoomHandler: (responseConnectObj: ResponseConnectType) => void,
-        setCountUsersToRoomHandler:(countUsersToRoom: number) => void
+        setCountUsersToRoomHandler:(countUsersToRoom: number) => void,
+        setFoundUserRooms: (foundUserRooms: UserRoomType[]) => void
     ) {
         this.socket?.on('connection', setRoomsHandler);
         this.socket?.on('firstConnectToRoom', firstConnectToRoomHandler );
         this.socket?.on('sendMessage', messageHandler);
         this.socket?.on("userRooms", setRoomsHandler)
+        this.socket?.on("foundUserRooms", setFoundUserRooms)
         this.socket?.on('connectToRoom', connectToRoomHandler)
         this.socket?.on('countUsersToRoom', setCountUsersToRoomHandler)
     },

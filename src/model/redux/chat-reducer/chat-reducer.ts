@@ -7,6 +7,7 @@ const slice = createSlice({
         currentRoom: {roomName: '', roomId: ''},
         countUsersToRoom: 0,
         userRooms: [],
+        foundUserRooms: [],
         messages: [] ,
     } as ChatInitialType,
     reducers: {
@@ -27,6 +28,9 @@ const slice = createSlice({
         },
         setCountUsersToRoom(state, action: PayloadAction<number>) {
             state.countUsersToRoom = action.payload
+        },
+        setFoundUserRooms(state, action: PayloadAction<UserRoomType[]>) {
+            state.foundUserRooms = action.payload
         }
     }
 })
@@ -41,4 +45,5 @@ type ChatInitialType = {
     currentRoom: UserRoomType
     countUsersToRoom: number
     userRooms: UserRoomType[]
+    foundUserRooms: UserRoomType[]
 }

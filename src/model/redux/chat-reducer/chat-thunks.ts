@@ -24,7 +24,11 @@ export const connectionTC = createAsyncThunk(
                  },
                  (countUsersToRoom) => {
                      thunkAPI.dispatch(chatActions.setCountUsersToRoom(countUsersToRoom))
+                 },
+                 (foundUserRooms) => {
+                     thunkAPI.dispatch(chatActions.setFoundUserRooms(foundUserRooms))
                  }
+
              )
 
             return {countUsersToRoom: 0, activeRoomName: ''}
